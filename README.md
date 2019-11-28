@@ -7,7 +7,7 @@ cd ourchain-release/src
 git clone https://github.com/strongshih/zk-tool.git
 cd zk-tool/
 git submodule update --init --recursive
-cd build/
+mkdir build && cd build/
 cmake ..
 make
 ```
