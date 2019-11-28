@@ -51,7 +51,7 @@ void test_r1cs_gg_ppzksnark(size_t num_constraints, size_t input_size)
     assert(bit);
 }
 
-int call_verify (int temp) {
+extern "C" int call_verify (int temp) {
     default_r1cs_gg_ppzksnark_pp::init_public_params();
     test_r1cs_gg_ppzksnark<default_r1cs_gg_ppzksnark_pp>(1000, 100);
 

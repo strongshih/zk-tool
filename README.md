@@ -40,4 +40,6 @@ int contract_main(int argc, char **argv)
 }
 ```
 
-- use `ourcontract-mkdll`, `ourcontract-rt` to test
+- use `ourcontract-mkdll` to compile
+- use `ourcontract-rt` to run, should add path to library, ex:
+	- `OURZKLIB=/home/sam/ourchain-release/src/zk-tool/build/src/libourzklib.so`
