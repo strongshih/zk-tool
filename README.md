@@ -18,7 +18,8 @@ make
 
 ### recompile ourchain
 
-- replace `ourcontract.h` and `libourcontract.c` with file under `ourcontract_modify`
+- replace `ourcontract.h` and `libourcontract.c` with files under `ourcontract_modify` (just add addtional implementation for user to call)
+- recompile ourchain
 
 ```
 cd ourchain-release
@@ -28,18 +29,30 @@ make
 sudo make install
 ```
 
-### test
+## test
+
+- test.c
 
 ```
 #include <ourcontract.h>
+
 int contract_main(int argc, char **argv)
 {
-    int b = call_verify(123);
-    err_printf("test verify %d\n", b);
+    int b = test_libsnark(atoi(argv[1]));
+    err_printf("Proof: x^3 + x + 5 == 35\n");
+    if (b) {
+        err_printf("Correct!!! x = %d\n", atoi(argv[1]));
+    } else {
+        err_printf("InCorrect!!! x != %d\n", atoi(argv[1]));
+    }
     return 0;
 }
 ```
 
-- use `ourcontract-mkdll` to compile
-- use `ourcontract-rt` to run, should add path to library, ex:
-	- `OURZKLIB=/home/sam/ourchain-release/src/zk-tool/build/src/libourzklib.so`
+```
+mkdir -p contracts/test
+// add test.c to contracts/test
+ourcontract-mkdll contracts test
+export OURZKLIB=/home/sam/ourchain-release/src/zk-tool/build/src/libourzklib.so
+ourcontract-rt contracts test 3
+```

@@ -245,25 +245,100 @@ int state_write(const void *buf, int count)
     return write(curr_frame->state_fd, buf, count);
 }
 
-int call_verify(int temp) {
-	char *libPath;
-	libPath = getenv("OURZKLIB");
+int test_libsnark(int input_x) {
+    char *libPath;
+    libPath = getenv("OURZKLIB");
 
-	void *handle = dlopen(libPath, RTLD_LAZY);
+    void *handle = dlopen(libPath, RTLD_LAZY);
     if (handle == NULL) {
-        err_printf("call_verify: dlopen failed\n");
-        err_printf("when using call_verify, environment variable OURZKLIB (location of libourzklib.so) should be specified\n");
+        err_printf("test_libsnark: dlopen failed\n");
         return EXIT_FAILURE;
     }
 
-    int (*call_function)(int) = dlsym(handle, "call_verify");
+    int (*call_function)(int) = dlsym(handle, "test_libsnark");
     if (call_function == NULL) {
-        err_printf("call_verify: %s\n", dlerror());
+        err_printf("test_libsnark: %s\n", dlerror());
         return EXIT_FAILURE;
     }
 
-	push("call_verify");
-    int ret = call_function(temp);
+    push("test_libsnark");
+    int ret = call_function(input_x);
+    pop();
+
+    dlclose(handle);
+    return ret;
+}
+
+int vote_zk_init(void) {
+	char *libPath;
+    libPath = getenv("OURZKLIB");
+
+    void *handle = dlopen(libPath, RTLD_LAZY);
+    if (handle == NULL) {
+        err_printf("vote_zk_init: dlopen failed\n");
+        return EXIT_FAILURE;
+    }
+
+    void (*call_function)(char*, char*) = dlsym(handle, "vote_zk_init");
+    if (call_function == NULL) {
+        err_printf("vote_zk_init: %s\n", dlerror());
+        return EXIT_FAILURE;
+    }
+
+    char proving_key_filename[PATH_MAX];
+    if (snprintf(proving_key_filename, PATH_MAX, "%s/%s/proving_key",
+                 get_contracts_dir(), curr_frame->name) >= PATH_MAX) {
+        err_printf("state_open: path too long\n");
+        return -1;
+    }
+
+    char verify_key_filename[PATH_MAX];
+    if (snprintf(verify_key_filename, PATH_MAX, "%s/%s/verify_key",
+                 get_contracts_dir(), curr_frame->name) >= PATH_MAX) {
+        err_printf("state_open: path too long\n");
+        return -1;
+    }
+
+    push("vote_zk_init");
+    call_function(proving_key_filename, verify_key_filename);
+    pop();
+
+    dlclose(handle);
+    return 0;
+}
+
+int vote_zk_verify(void) {
+	char *libPath;
+    libPath = getenv("OURZKLIB");
+
+    void *handle = dlopen(libPath, RTLD_LAZY);
+    if (handle == NULL) {
+        err_printf("vote_zk_verify: dlopen failed\n");
+        return EXIT_FAILURE;
+    }
+
+    int (*call_function)(char*, char*) = dlsym(handle, "vote_zk_verify");
+    if (call_function == NULL) {
+        err_printf("vote_zk_verify: %s\n", dlerror());
+        return EXIT_FAILURE;
+    }
+
+    char proof_filename[PATH_MAX];
+    if (snprintf(proof_filename, PATH_MAX, "%s/%s/proof",
+                 get_contracts_dir(), curr_frame->name) >= PATH_MAX) {
+        err_printf("state_open: path too long\n");
+        return -1;
+    }
+
+    char verify_key_filename[PATH_MAX];
+    if (snprintf(verify_key_filename, PATH_MAX, "%s/%s/verify_key",
+                 get_contracts_dir(), curr_frame->name) >= PATH_MAX) {
+        err_printf("state_open: path too long\n");
+        return -1;
+    }
+
+    push("vote_zk_verify");
+    int ret = call_function(verify_key_filename, proof_filename);
     pop();
 
     dlclose(handle);
