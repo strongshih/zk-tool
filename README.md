@@ -90,13 +90,14 @@ make
 	                  |
 	                  V
 	// (2) using dynamic library to call c++ code in libsnark and provide function simultaneously
-	test_libsnark in zk_tool/src/test/test_libsnark.cpp (by using path to OURZKLIB)
+	test_libsnark in zk-tool/src/test/test_libsnark.cpp (by using path to OURZKLIB)
 	                  |
 	                  V
 	using any libsnark libraries
 	```	
 
 - `(1)` and `(2)` are where we develop function call for user
+- check out files under `ourchain/src/zk-tool/src`
 
 ## others
 
