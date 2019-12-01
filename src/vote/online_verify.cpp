@@ -33,6 +33,6 @@ extern "C" int vote_zk_verify (char *verify_key_path, char *proof_path) {
 	if (verified1) {
 		return 1;
 	} else {
-		return 0;
+		return -1;
 	}
 }

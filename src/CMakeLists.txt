@@ -19,7 +19,7 @@ target_include_directories(
 add_library(
   ourzklib SHARED
 
-  test_libsnark.cpp 
+  test/test_libsnark.cpp 
   vote/trusted_setup.cpp 
   vote/online_verify.cpp 
   vote/utils.cpp 

@@ -79,7 +79,10 @@ def generate_sha256_gadget_tests(ori_left, ori_right):
     out_ = []
     for i in ret_ss:
         out_.append(str(int(i, 0)))
-    print(out_)
+    for i in out_:
+        sys.stdout.write(i+' ')
+    sys.stdout.write('\n')
+
     return out_
 
 if __name__ == '__main__':
@@ -87,6 +90,7 @@ if __name__ == '__main__':
     left = raw_input('age: ')
     right = raw_input('password (0,1s): ')
     ret_ = generate_sha256_gadget_tests(left, right)
-    subprocess.call([sys.argv[1], os.path.join(sys.argv[2], 'proving_key'),
-                    os.path.join(sys.argv[2], 'proof'), left, right] + ret_)
+    if len(sys.argv) == 3:
+        subprocess.call([sys.argv[1], os.path.join(sys.argv[2], 'proving_key'),
+            os.path.join(sys.argv[2], 'proof'), left, right] + ret_)
 
