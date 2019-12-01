@@ -41,39 +41,27 @@ make
 - replace `ourcontract.h` and `libourcontract.c` with files under `ourcontract_modify` (just add addtional implementation for user to call)
 - recompile ourchain
 
-```
-cd /tmp/ourchain
-./autogen
-./configure
-make
-sudo make install
-```
+	```
+	cd /tmp/ourchain
+	./autogen
+	./configure
+	make
+	sudo make install
+	```
 
 ## test
 
-- test.c
+- compile and prepare
 
-```
-#include <ourcontract.h>
+	```
+	mkdir -p /tmp/contracts/test
+	cp /tmp/ourchain/src/zk-tool/src/vote/vote.c /tmp/contracts/test
+	cd /tmp
+	ourcontract-mkdll contracts test
+	export OURZKLIB=/tmp/ourchain/src/zk-tool/build/src/libourzklib.so
+	ourcontract-rt contracts test
+	```
+	
+## others
 
-int contract_main(int argc, char **argv)
-{
-    int b = test_libsnark(atoi(argv[1]));
-    err_printf("Proof: x^3 + x + 5 == 35\n");
-    if (b) {
-        err_printf("Correct!!! x = %d\n", atoi(argv[1]));
-    } else {
-        err_printf("InCorrect!!! x != %d\n", atoi(argv[1]));
-    }
-    return 0;
-}
-```
-
-```
-mkdir -p /tmp/contracts/test
-// add test.c to /tmp/contracts/test
-cd /tmp
-ourcontract-mkdll contracts test
-export OURZKLIB=/tmp/ourchain/src/zk-tool/build/src/libourzklib.so
-ourcontract-rt contracts test 3
-```
+- only add function into `ourcontract.h` and `libourcontract.c`, and add addtional folder `zk-tool` under `ourchain/src`
