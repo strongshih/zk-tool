@@ -67,6 +67,37 @@ make
 	
 ## develop	
 	
+- call stack
+
+	```
+	ourcontract-rt contracts_example test
+	                  |
+	                  V
+	main in ourcontract-rt.c 
+	                  |
+	                  V
+	start_runtime in libourcontract.c
+	                  |
+	                  V
+	call_contract in libourcontract.c
+	                  |
+	                  V
+	contract_main in contracts_example/test/code.so using dlsym
+	                  |
+	                  V
+	// (1) develop function call for contract
+	test_libsnark in libourcontract.c
+	                  |
+	                  V
+	// (2) using dynamic library to call c++ code in libsnark and provide function simultaneously
+	test_libsnark in zk_tool/src/test/test_libsnark.cpp (by using path to OURZKLIB)
+	                  |
+	                  V
+	using any libsnark libraries
+	```	
+
+- `(1)` and `(2)` are where we develop function call for user
+
 ## others
 
 - only add function into `ourcontract.h` and `libourcontract.c`, and add addtional folder `zk-tool` under `ourchain/src`
