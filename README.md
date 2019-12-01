@@ -21,7 +21,7 @@ cd /tmp/ourchain/
 ./configure
 make
 sudo make install
-ldconfig
+sudo ldconfig
 ```
 
 ### build library
@@ -38,15 +38,20 @@ make
 
 ### recompile ourchain
 
-- replace `ourcontract.h` and `libourcontract.c` with files under `ourcontract_modify` (just add addtional implementation for user to call)
+- replace `ourcontract.h` and `libourcontract.c` with files under `lib` (just add addtional implementation for user to call)
+
+	```
+	cp /tmp/ourchain/src/zk-tool/lib/ourcontract.h /tmp/ourchain/src/contract/
+	cp /tmp/ourchain/src/zk-tool/lib/libourcontract.c /tmp/ourchain/src/contract/
+	```
+
 - recompile ourchain
 
 	```
 	cd /tmp/ourchain
-	./autogen
-	./configure
 	make
 	sudo make install
+	sudo ldconfig
 	```
 
 ## test
@@ -54,13 +59,13 @@ make
 - compile and prepare
 
 	```
-	mkdir -p /tmp/contracts/test
-	cp /tmp/ourchain/src/zk-tool/src/vote/vote.c /tmp/contracts/test
-	cd /tmp
-	ourcontract-mkdll contracts test
+	cd /tmp/ourchain/src/zk-tool
+	ourcontract-mkdll contracts_example test
 	export OURZKLIB=/tmp/ourchain/src/zk-tool/build/src/libourzklib.so
-	ourcontract-rt contracts test
+	ourcontract-rt contracts_example test
 	```
+	
+## develop	
 	
 ## others
 
