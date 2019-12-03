@@ -27,6 +27,7 @@ sudo ldconfig
 ### build library
 
 ```
+sudo apt-get install build-essential cmake git libgmp3-dev libprocps4-dev python-markdown libboost-all-dev libssl-dev
 cd /tmp/ourchain/src
 git clone https://github.com/strongshih/zk-tool.git
 cd zk-tool/
